@@ -1,109 +1,63 @@
-#include "main.h"
+#include <stdarg.h>
 #include <unistd.h>
-
-/**
- * _putchar - Custom putchar function
- * @c: Character to be printed
- * Return: 1 on success, -1 on error
- */
-int _putchar(char c)
-{
-	return (write(1, &c, 1));
-}
+#include "main.h"
 
 /**
  * _printf - Custom printf function
  * @format: Format string
- * Return: Number of printed characters
+ *
+ * Return: Number of characters printed (excluding null byte)
  */
 int _printf(const char *format, ...)
 {
-	int printed_chars = 0;
-	va_list args;
-	va_start(args, format);
+	int i, len = 0;
+	char c;
+	char *s;
+	va_list arg;
 
-	while (*format)
+	va_start(arg, format);
+	for (i = 0; format && format[i]; i++)
 	{
-		if (*format == '%')
+		if (format[i] == '%')
 		{
-			format++;
-			if (*format == '\0')
-				break;
-			else if (*format == '%')
+			i++;
+			switch (format[i])
 			{
-				_putchar('%');
-				printed_chars++;
-			}
-			else if (*format == 'c')
-			{
-				int c = va_arg(args, int);
-				_putchar(c);
-				printed_chars++;
-			}
-			else if (*format == 's')
-			{
-				char *s = va_arg(args, char *);
-				if (s == NULL)
-					s = "(null)";
-				while (*s)
-				{
-					_putchar(*s);
-					s++;
-					printed_chars++;
-				}
-			}
-			else
-			{
-				_putchar('%');
-				_putchar(*format);
-				printed_chars += 2;
-			}
-		}
-		else
-		{
-			_putchar(*format);
-			printed_chars++;
-		}
-		format++;
-	}
-
-	va_list args;
-	int printed_chars = 0;
-
-	if (format == NULL)
-		return (-1);
-
-	va_start(args, format);
-
-	while (*format != '\0')
-	{
-		if (*format == '%')
-		{
-			format++;
-			if (*format == '\0')
-				return (-1);
-			switch (*format)
-			{
-				case 'd':
-				case 'i':
-					printed_chars += _print_int(va_arg(args, int));
+				case 'c':
+					c = va_arg(arg, int);
+					write(1, &c, 1);
+					len++;
+					break;
+				case 's':
+					s = va_arg(arg, char *);
+					if (s == NULL)
+						s = "(null)";
+					while (*s)
+					{
+						write(1, s, 1);
+						s++;
+						len++;
+					}
+					break;
+				case '%':
+					write(1, &format[i], 1);
+					len++;
 					break;
 				default:
-					_putchar('%');
-					_putchar(*format);
-					printed_chars += 2;
+					write(1, "%", 1);
+					write(1, &format[i], 1);
+					len += 2;
 					break;
 			}
 		}
 		else
 		{
-			_putchar(*format);
-			printed_chars++;
+			write(1, &format[i], 1);
+			len++;
 		}
-		format++;
 	}
+	va_end(arg);
 
-	va_end(args);
-	return (printed_chars);
+	return (len);
 }
 
