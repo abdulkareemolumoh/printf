@@ -1,46 +1,3 @@
-/**
- * _itoa - converts an integer to a string
- * @value: the integer value to convert
- * @buffer: the buffer to store the resulting string
- * @base: the numerical base to use (typically 10)
- *
- * Return: a pointer to the resulting string
- */
-char *_itoa(int value, char *buffer, int base)
-{
-	// handle negative values
-	if (value < 0)
-	{
-		*buffer++ = '-';
-		value = -value;
-	}
-
-	// convert the value to a string in reverse order
-	char *p = buffer;
-	do
-	{
-		*p++ = "0123456789abcdef"[value % base];
-		value /= base;
-	} while (value);
-
-	// add a null terminator and reverse the string
-	*p = '\0';
-	char *q = buffer;
-	if (*q == '-')
-	{
-		++q; // skip over the negative sign
-	}
-	for (--p; q < p; ++q, --p)
-	{
-		char temp = *q;
-		*q = *p;
-		*p = temp;
-	}
-
-	return buffer;
-}
-
-
 #include "main.h"
 
 /**
@@ -84,5 +41,48 @@ int _printf(const char *format, ...)
 
 	va_end(args);
 	return count;
+}
+
+
+/**
+ * _itoa - converts an integer to a string
+ * @value: the integer value to convert
+ * @buffer: the buffer to store the resulting string
+ * @base: the numerical base to use (typically 10)
+ *
+ * Return: a pointer to the resulting string
+ */
+char *_itoa(int value, char *buffer, int base)
+{
+	// handle negative values
+	if (value < 0)
+	{
+		*buffer++ = '-';
+		value = -value;
+	}
+
+	// convert the value to a string in reverse order
+	char *p = buffer;
+	do
+	{
+		*p++ = "0123456789abcdef"[value % base];
+		value /= base;
+	} while (value);
+
+	// add a null terminator and reverse the string
+	*p = '\0';
+	char *q = buffer;
+	if (*q == '-')
+	{
+		++q; // skip over the negative sign
+	}
+	for (--p; q < p; ++q, --p)
+	{
+		char temp = *q;
+		*q = *p;
+		*p = temp;
+	}
+
+	return buffer;
 }
 
