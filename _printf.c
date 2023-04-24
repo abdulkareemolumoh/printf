@@ -67,6 +67,42 @@ int _printf(const char *format, ...)
 		format++;
 	}
 
+	va_list args;
+	int printed_chars = 0;
+
+	if (format == NULL)
+		return (-1);
+
+	va_start(args, format);
+
+	while (*format != '\0')
+	{
+		if (*format == '%')
+		{
+			format++;
+			if (*format == '\0')
+				return (-1);
+			switch (*format)
+			{
+				case 'd':
+				case 'i':
+					printed_chars += _print_int(va_arg(args, int));
+					break;
+				default:
+					_putchar('%');
+					_putchar(*format);
+					printed_chars += 2;
+					break;
+			}
+		}
+		else
+		{
+			_putchar(*format);
+			printed_chars++;
+		}
+		format++;
+	}
+
 	va_end(args);
 	return (printed_chars);
 }
