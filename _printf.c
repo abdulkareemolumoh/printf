@@ -1,58 +1,63 @@
-#include <stdio.h>
-#include <stdarg.h>
-#include "main.h"
+#include <unistd.h> /* for write */
+#include "main.h" /* include the header file with function prototypes */
 
 /**
  * _printf - Custom implementation of printf function
- * @format: Format string
+ * @format: Format string containing zero or more directives
  *
- * Return: Number of characters printed
+ * Return: Number of characters printed (excluding the null byte used to end output to strings)
  */
 int _printf(const char *format, ...)
 {
-	int i = 0, count = 0;
-	va_list args;
+	int count = 0; /* to keep track of characters printed */
+	va_list args; /* to hold the variable arguments */
+	char c; /* to store characters from format string */
+	char *s; /* to store strings from format string */
 
-	if (format == NULL)
-		return (-1);
-
-	va_start(args, format);
-
-	while (format[i] != '\0')
+	va_start(args, format); /* initialize variable arguments */
+	while (format && *format) /* iterate through format string */
 	{
-		if (format[i] == '%')
+		if (*format != '%') /* normal character */
 		{
-			i++;
-			if (format[i] == '\0')
-				return (-1);
-
-			switch (format[i])
+			_putchar(*format); /* print the character */
+			count++;
+			format++;
+		}
+		else /* conversion specifier */
+		{
+			format++; /* move past '%' */
+			switch (*format)
 			{
 				case 'c':
-					count += _putchar(va_arg(args, int));
+					c = va_arg(args, int); /* get character argument */
+					_putchar(c); /* print the character */
+					count++;
 					break;
 				case 's':
-					count += _puts(va_arg(args, char *));
+					s = va_arg(args, char *); /* get string argument */
+					if (s == NULL)
+						s = "(null)"; /* handle NULL string */
+					while (*s)
+					{
+						_putchar(*s); /* print the string character by character */
+						count++;
+						s++;
+					}
 					break;
 				case '%':
-					count += _putchar('%');
+					_putchar('%'); /* print a '%' character */
+					count++;
 					break;
 				default:
-					count += _putchar('%');
-					count += _putchar(format[i]);
+					_putchar('%'); /* print the '%' character */
+					_putchar(*format); /* print the unrecognized specifier */
+					count += 2;
 					break;
 			}
+			format++;
 		}
-		else
-		{
-			_putchar(format[i]);
-			count++;
-		}
-		i++;
 	}
-
-	va_end(args);
-
-	return (count);
+	va_end(args); /* clean up variable arguments */
+	return count;
 }
 
