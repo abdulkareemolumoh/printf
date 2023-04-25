@@ -1,41 +1,49 @@
 #include "main.h"
-#include <unistd.h>
 
 /**
- * _putchar - Writes a character to stdout
- * @c: The character to be written
- *
- * Return: On success, return the character written. On error, return -1.
+ * print_int - Print int
+ * @types: List of arguments
+ * @buffer: Buffer array to handle print
+ * @flags: Calculates active flags
+ * @width: Width
+ * @precision: Precision specification
+ * @size: Size specifier
+ * Return: Number of chars printed
  */
-int _putchar(char c)
+int print_int(va_list types, char buffer[],
+		int flags, int width, int precision, int size)
 {
-	return (write(1, &c, 1));
-}
+	int i = BUFF_SIZE - 2;
+	int is_negative = 0;
+	int n = va_arg(types, int);
+	unsigned int num;
 
-/**
- * print_number - Prints an integer to stdout
- * @n: The integer to be printed
- *
- * Return: Number of digits printed
- */
-int print_number(int n)
-{
-	int num_digits = 0;
+	UNUSED(buffer);
+	UNUSED(flags);
+	UNUSED(width);
+	UNUSED(precision);
+	UNUSED(size);
 
-	/* Handle negative numbers */
+	if (n == 0)
+		buffer[i--] = '0';
+
+	buffer[BUFF_SIZE - 1] = '\0';
+	num = (unsigned int)n;
+
 	if (n < 0)
 	{
-		_putchar('-');
-		num_digits++;
-		n = -n;
+		num = (unsigned int)((-1) * n);
+		is_negative = 1;
 	}
 
-	/* Print digits in reverse order */
-	if (n / 10)
-		num_digits += print_number(n / 10);
-	_putchar('0' + n % 10);
-	num_digits++;
+	while (num > 0)
+	{
+		buffer[i--] = (num % 10) + '0';
+		num /= 10;
+	}
 
-	return (num_digits);
+	i++;
+
+	return (write_number(is_negative, i, buffer, flags, width, precision, size));
 }
 
