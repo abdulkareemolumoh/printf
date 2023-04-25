@@ -1,7 +1,3 @@
-#include <stdarg.h>
-#include <unistd.h>
-#include "main.h"
-
 /**
  * _printf - Produces output according to a format.
  * @format: The format string.
@@ -11,20 +7,23 @@
  */
 int _printf(const char *format, ...)
 {
-	va_list args;
 	int printed = 0;
 	char ch;
+	char buffer[1024]; /* Buffer to store characters to be printed */
+	int buffer_index = 0; /* Index to keep track of buffer position */
+	char *str;
 
 	if (format == NULL)
 		return (-1);
 
+	va_list args;
 	va_start(args, format);
 
 	for (int i = 0; format[i]; i++)
 	{
 		if (format[i] != '%')
 		{
-			write(1, &format[i], 1);
+			buffer[buffer_index++] = format[i];
 			printed++;
 		}
 		else
@@ -40,19 +39,27 @@ int _printf(const char *format, ...)
 			{
 				case 'c':
 					ch = va_arg(args, int);
-					write(1, &ch, 1);
+					buffer[buffer_index++] = ch;
 					printed++;
 					break;
 				case 's':
-					printed += _print_str(va_arg(args, char *));
+					str = va_arg(args, char *);
+					if (str == NULL)
+						str = "(null)";
+					while (*str)
+					{
+						buffer[buffer_index++] = *str;
+						str++;
+						printed++;
+					}
 					break;
 				case '%':
-					write(1, &format[i], 1);
+					buffer[buffer_index++] = '%';
 					printed++;
 					break;
 				default:
-					write(1, "%", 1);
-					write(1, &format[i], 1);
+					buffer[buffer_index++] = '%';
+					buffer[buffer_index++] = format[i];
 					printed += 2;
 					break;
 			}
@@ -60,6 +67,9 @@ int _printf(const char *format, ...)
 	}
 
 	va_end(args);
+
+	/* Write characters from buffer to stdout */
+	write(1, buffer, buffer_index);
 
 	return (printed);
 }
@@ -73,16 +83,29 @@ int _printf(const char *format, ...)
 int _print_str(char *str)
 {
 	int i = 0;
+	char ch;
 
 	if (str == NULL)
 	{
-		write(1, "(null)", 6);
+		ch = '(';
+		write(1, &ch, 1);
+		ch = 'n';
+		write(1, &ch, 1);
+		ch = 'u';
+		write(1, &ch, 1);
+		ch = 'l';
+		write(1, &ch, 1);
+		ch = 'l';
+		write(1, &ch, 1);
+		ch = ')';
+		write(1, &ch, 1);
 		return (6);
 	}
 
 	while (str[i])
 	{
-		write(1, &str[i], 1);
+		ch = str[i];
+		write(1, &ch, 1);
 		i++;
 	}
 
