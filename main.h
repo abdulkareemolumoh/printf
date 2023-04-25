@@ -10,7 +10,6 @@ int _print_str(char *str);
 
 ---------------------
 
-#include <stdarg.h>  // for va_list
 #include <stdio.h>   // for snprintf
 
 #define BUFF_SIZE 1024 // Buffer size for printing
