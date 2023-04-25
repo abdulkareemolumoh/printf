@@ -2,7 +2,9 @@
 #define MAIN_H
 
 #include <stdarg.h>
+#include <unistd.h>
 
+// Function prototypes
 int _printf(const char *format, ...);
 int _print_str(char *str);
 
