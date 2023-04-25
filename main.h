@@ -1,16 +1,14 @@
 #ifndef MAIN_H
 #define MAIN_H
-
 #include <stdarg.h>
 #include <unistd.h>
+#include <stdio.h>
 
 // Function prototypes
 int _printf(const char *format, ...);
 int _print_str(char *str);
 
 ---------------------
-
-#include <stdio.h>   // for snprintf
 
 #define BUFF_SIZE 1024 // Buffer size for printing
 
