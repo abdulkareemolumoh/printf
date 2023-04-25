@@ -1,19 +1,12 @@
 #ifndef MAIN_H
 #define MAIN_H
-#include <stdarg.h>
-#include <unistd.h>
-#include <stdio.h>
+
+#include <stdarg.h> // for va_list
+#include <unistd.h> // for write
 
 // Function prototypes
 int _printf(const char *format, ...);
 int _print_str(char *str);
 
----------------------
-
-// Function prototypes
-int print_int(va_list types, char buffer[], int flags, int width, int precision, int size);
-int write_number(int is_negative, int i, char buffer[], int flags, int width, int precision, int size);
-
-// Macro for unused parameters
 #endif /* MAIN_H */
 
